@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Relief Requests</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    margin: 0;
+    background: #fff5f5;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+header {
+    background: #b71c1c;
+    color: white;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.logo { font-size: 23px; font-weight: bold; }
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 8px;
+    font-weight: bold;
+}
+.page-container {
+    max-width: 900px;
+    margin: 35px auto;
+    padding: 15px;
+}
+.page-header {
+    background: #c62828;
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+.page-header h1 { margin-top: 0; }
+.form-card, .table-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border-top: 5px solid #c62828;
+}
+.form-card h2, .table-card h2 { color: #b71c1c; }
+.form-description { color: #666; line-height: 1.6; }
+label {
+    display: block;
+    margin-top: 17px;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0b4b4;
+    border-radius: 7px;
+    box-sizing: border-box;
+    font-size: 15px;
+    background: #fffafa;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border: 2px solid #c62828;
+}
+.submit-btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: none;
+    border-radius: 7px;
+    background: #c62828;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.submit-btn:hover { background: #8e0000; }
+.table-wrapper { overflow-x: auto; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+th {
+    background: #b71c1c;
+    color: white;
+    padding: 13px;
+}
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+.pending { color: #b71c1c; font-weight: bold; }
+.priority-high { color: red; font-weight: bold; }
+.priority-medium { color: #d97706; font-weight: bold; }
+.priority-low { color: green; font-weight: bold; }
+
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.empty-message {
+    text-align: center;
+    color: #777;
+    padding: 18px;
+}
+footer {
+    background: #8e0000;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+@media(max-width:600px) {
+    header { gap: 12px; }
+    .page-container { margin: 15px auto; }
+    .form-card, .table-card { padding: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">SOS DVRMS</div>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main class="page-container">
+
+<section class="page-header">
+    <h1>🚨 Relief Requests</h1>
+    <p>Submit and manage requests for disaster relief assistance.</p>
+</section>
+
+<section class="form-card">
+<h2>Submit a Relief Request</h2>
+<p class="form-description">
+Enter the required information so that relief teams can respond quickly.
+</p>
+
+<form id="reliefForm">
+
+<label>Person / Family Name</label>
+<input type="text" id="requestName" placeholder="Enter name" required>
+
+<label>Mobile Number</label>
+<input type="tel" id="requestMobile"
+placeholder="Enter mobile number" maxlength="10"
+pattern="[0-9]{10}" required>
+
+<label>Location</label>
+<input type="text" id="requestLocation"
+placeholder="Enter affected area" required>
+
+<label>Relief Required</label>
+<select id="reliefType" required>
+<option value="">Select required assistance</option>
+<option value="Food">Food</option>
+<option value="Water">Drinking Water</option>
+<option value="Medical">Medical Assistance</option>
+<option value="Shelter">Shelter</option>
+<option value="Clothing">Clothing</option>
+<option value="Rescue">Rescue Support</option>
+<option value="Other">Other</option>
+</select>
+
+<label>Number of People</label>
+<input type="number" id="peopleCount" min="1"
+placeholder="Number of people needing help" required>
+
+<label>Priority</label>
+<select id="priority" required>
+<option value="">Select priority</option>
+<option value="High">High</option>
+<option value="Medium">Medium</option>
+<option value="Low">Low</option>
+</select>
+
+<label>Additional Details</label>
+<textarea id="details" rows="4"
+placeholder="Describe the situation or additional requirements..."></textarea>
+
+<button type="submit" class="submit-btn">
+🚨 Submit Relief Request
+</button>
+
+</form>
+</section>
+
+<section class="table-card">
+<h2>Recent Relief Requests</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Request ID</th>
+<th>Location</th>
+<th>Need</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="requestBody"></tbody>
+</table>
+</div>
+</section>
+
+</main>
+
+<footer>
+<h3>SOS DVRMS</h3>
+<p>Disaster Relief Volunteer Management System</p>
+<p>2026 DVRMS</p>
+</footer>
+
+<script>
+
+function getRequests() {
+    try {
+        const data = JSON.parse(
+            localStorage.getItem("reliefRequests") || "[]"
+        );
+        return Array.isArray(data) ? data : [];
+    } catch(error) {
+        return [];
+    }
+}
+
+function displayRequests() {
+
+    const requests = getRequests();
+    const tbody = document.getElementById("requestBody");
+
+    tbody.innerHTML = "";
+
+    if(requests.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 6;
+        cell.className = "empty-message";
+        cell.textContent = "No relief requests submitted yet.";
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+    }
+
+    requests.forEach(function(req, index) {
+
+        const row = document.createElement("tr");
+
+        const values = [
+            req.id,
+            req.location,
+            req.relief,
+            req.priority,
+            req.status || "Pending"
+        ];
+
+        values.forEach(function(value, i) {
+            const cell = document.createElement("td");
+            cell.textContent = value || "-";
+
+            if(i === 3) {
+                cell.className = "priority-" +
+                    String(value).toLowerCase();
+            }
+
+            if(i === 4) {
+                cell.className = "pending";
+            }
+
+            row.appendChild(cell);
+        });
+
+        const actionCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
+
+        deleteBtn.addEventListener("click", function() {
+            deleteRequest(index);
+        });
+
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    });
+}
+
+function deleteRequest(index) {
+
+    if(!confirm("Are you sure you want to delete this request?")) {
+        return;
+    }
+
+    const requests = getRequests();
+    requests.splice(index, 1);
+
+    localStorage.setItem(
+        "reliefRequests",
+        JSON.stringify(requests)
+    );
+
+    displayRequests();
+
+    alert("Relief request deleted successfully!");
+}
+
+document.getElementById("reliefForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const requests = getRequests();
+
+    const requestId = "DR" +
+        Math.floor(100 + Math.random() * 900);
+
+    const newRequest = {
+        id: requestId,
+        name: document.getElementById("requestName").value.trim(),
+        mobile: document.getElementById("requestMobile").value.trim(),
+        location: document.getElementById("requestLocation").value.trim(),
+        relief: document.getElementById("reliefType").value,
+        people: document.getElementById("peopleCount").value,
+        priority: document.getElementById("priority").value,
+        details: document.getElementById("details").value.trim(),
+        status: "Pending"
+    };
+
+    requests.push(newRequest);
+
+    localStorage.setItem(
+        "reliefRequests",
+        JSON.stringify(requests)
+    );
+
+    alert(
+        "Relief Request Submitted Successfully!\n\n" +
+        "Request ID: " + requestId
+    );
+
+    document.getElementById("reliefForm").reset();
+    displayRequests();
+});
+
+displayRequests();
+
+</script>
+
+</body>
+</html>
+

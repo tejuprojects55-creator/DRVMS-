@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Task Coordination</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    background: #f0f6ff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #1e293b;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 20px;
+}
+
+.header {
+    background: #1d4ed8;
+    color: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.card h2 {
+    color: #1d4ed8;
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 85px;
+}
+
+button {
+    border: none;
+    padding: 11px 17px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.submit-btn {
+    background: #1d4ed8;
+    color: white;
+}
+
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    margin-top: 12px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.task-card {
+    border: 1px solid #dbeafe;
+    border-left: 5px solid #2563eb;
+    padding: 17px;
+    border-radius: 9px;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+.task-card h3 {
+    margin-top: 0;
+    color: #1e40af;
+}
+
+.task-card p {
+    margin: 8px 0;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.empty {
+    text-align: center;
+    color: #64748b;
+    padding: 20px;
+}
+
+.priority-high {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.priority-medium {
+    color: #d97706;
+    font-weight: bold;
+}
+
+.priority-low {
+    color: #15803d;
+    font-weight: bold;
+}
+
+@media(max-width:600px) {
+    .container {
+        padding: 12px;
+        margin: 10px auto;
+    }
+
+    .card {
+        padding: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Task Coordination</h1>
+        <p>Assign and manage disaster relief tasks.</p>
+    </div>
+
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="volunteers.html">Volunteers</a>
+        <a href="tasks.html">Task Coordination</a>
+        <a href="disaster-alerts.html">Disaster Alerts</a>
+    </div>
+
+    <div class="card">
+        <h2>Assign New Task</h2>
+
+        <form id="taskForm">
+
+            <div class="form-group">
+                <label for="taskName">Task Name</label>
+                <input type="text" id="taskName"
+                       placeholder="Enter task name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="volunteer">Assign Volunteer</label>
+                <select id="volunteer" required>
+                    <option value="">Select Volunteer</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location"
+                       placeholder="Enter affected location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" required>
+                    <option value="">Select Priority</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Task Description</label>
+                <textarea id="description"
+                          placeholder="Enter task description"
+                          required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Assign Task
+            </button>
+
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Assigned Tasks</h2>
+        <div id="taskList"></div>
+    </div>
+
+</div>
+
+<script>
+
+// ADMIN LOGIN CHECK
+if (
+    localStorage.getItem("isLoggedIn") !== "true" ||
+    localStorage.getItem("userRole") !== "admin"
+) {
+    alert("Please login as Admin to access Task Coordination.");
+    window.location.href = "login.html";
+}
+
+// GET TASKS FROM LOCAL STORAGE
+function getTasks() {
+    try {
+        const tasks = JSON.parse(
+            localStorage.getItem("taskData") || "[]"
+        );
+
+        if (!Array.isArray(tasks)) {
+            return [];
+        }
+
+        let changed = false;
+
+        // Add IDs to older tasks that do not have IDs
+        tasks.forEach(task => {
+            if (!task.id) {
+                task.id =
+                    "task-" + Date.now() + "-" +
+                    Math.random().toString(36).slice(2);
+
+                changed = true;
+            }
+        });
+
+        if (changed) {
+            saveTasks(tasks);
+        }
+
+        return tasks;
+
+    } catch (error) {
+        console.error("Unable to read tasks:", error);
+        return [];
+    }
+}
+
+// SAVE TASKS
+function saveTasks(tasks) {
+    localStorage.setItem("taskData", JSON.stringify(tasks));
+}
+
+// LOAD VOLUNTEERS
+function loadVolunteers() {
+    const select = document.getElementById("volunteer");
+
+    let volunteers = [];
+
+    try {
+        volunteers = JSON.parse(
+            localStorage.getItem("volunteerList") || "[]"
+        );
+
+        if (!Array.isArray(volunteers)) {
+            volunteers = [];
+        }
+    } catch (error) {
+        volunteers = [];
+    }
+
+    select.innerHTML =
+        '<option value="">Select Volunteer</option>';
+
+    volunteers.forEach(volunteer => {
+        const name = volunteer.name || volunteer.fullName;
+
+        if (!name) return;
+
+        const option = document.createElement("option");
+
+        option.value = name;
+        option.textContent = name;
+
+        select.appendChild(option);
+    });
+}
+
+// DISPLAY TASKS
+function showTasks() {
+    const taskList = document.getElementById("taskList");
+    const tasks = getTasks();
+
+    taskList.innerHTML = "";
+
+    if (tasks.length === 0) {
+        taskList.innerHTML =
+            '<p class="empty">No tasks assigned yet.</p>';
+        return;
+    }
+
+    tasks.forEach(task => {
+
+        const card = document.createElement("div");
+        card.className = "task-card";
+
+        const title = document.createElement("h3");
+        title.textContent = task.name || "Untitled Task";
+
+        const volunteer = document.createElement("p");
+        volunteer.textContent =
+            "Volunteer: " + (task.volunteer || "Not assigned");
+
+        const location = document.createElement("p");
+        location.textContent =
+            "Location: " + (task.location || "Not specified");
+
+        const priority = document.createElement("p");
+        priority.textContent =
+            "Priority: " + (task.priority || "Medium");
+
+        priority.className =
+            task.priority === "High" ? "priority-high" :
+            task.priority === "Low" ? "priority-low" :
+            "priority-medium";
+
+        const description = document.createElement("p");
+        description.textContent =
+            "Description: " + (task.description || "No description");
+
+        const status = document.createElement("span");
+
+        const currentStatus = task.status || "Pending";
+
+        status.textContent = currentStatus;
+        status.className =
+            "status " +
+            (currentStatus.toLowerCase() === "completed"
+                ? "completed"
+                : "pending");
+
+        const deleteBtn = document.createElement("button");
+
+        deleteBtn.textContent = "Delete Task";
+        deleteBtn.className = "delete-btn";
+
+        // DELETE TASK - WORKS FOR OLD AND NEW TASKS
+        deleteBtn.onclick = function () {
+
+            if (confirm("Are you sure you want to delete this task?")) {
+
+                const updated = getTasks();
+
+                const taskIndex = updated.findIndex(
+                    item => item.id === task.id
+                );
+
+                if (taskIndex !== -1) {
+                    updated.splice(taskIndex, 1);
+                    saveTasks(updated);
+                    showTasks();
+
+                    alert("Task deleted successfully.");
+                }
+            }
+        };
+
+        card.appendChild(title);
+        card.appendChild(volunteer);
+        card.appendChild(location);
+        card.appendChild(priority);
+        card.appendChild(description);
+        card.appendChild(document.createElement("br"));
+        card.appendChild(status);
+        card.appendChild(document.createElement("br"));
+        card.appendChild(deleteBtn);
+
+        taskList.appendChild(card);
+    });
+}
+
+// ASSIGN NEW TASK
+document.getElementById("taskForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("taskName").value.trim();
+
+        const volunteer =
+            document.getElementById("volunteer").value;
+
+        const location =
+            document.getElementById("location").value.trim();
+
+        const priority =
+            document.getElementById("priority").value;
+
+        const description =
+            document.getElementById("description").value.trim();
+
+        if (!name || !volunteer || !location ||
+            !priority || !description) {
+
+            alert("Please fill all fields.");
+            return;
+        }
+
+        const tasks = getTasks();
+
+        const newTask = {
+            id: "task-" + Date.now() + "-" +
+                Math.random().toString(36).slice(2),
+
+            name: name,
+            volunteer: volunteer,
+            location: location,
+            priority: priority,
+            description: description,
+            status: "Pending"
+        };
+
+        tasks.push(newTask);
+
+        saveTasks(tasks);
+
+        document.getElementById("taskForm").reset();
+
+        showTasks();
+
+        alert("Task assigned successfully!");
+    }
+);
+
+// INITIAL LOAD
+loadVolunteers();
+showTasks();
+
+</script>
+
+</body>
+</html>
+

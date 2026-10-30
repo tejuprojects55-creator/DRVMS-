@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DVRMS | Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="alerts.html">Alerts</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <!-- Welcome -->
+    <section class="dashboard-welcome">
+
+        <div>
+            <h1 id="welcomeMessage">Welcome to DVRMS 👋</h1>
+            <p>
+                Disaster Relief Volunteer Management System
+            </p>
+        </div>
+
+        <div class="status">
+            🟢 System Active
+        </div>
+
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <span>🙋</span>
+            <h2 id="volunteerCount">0</h2>
+            <p>Volunteers</p>
+        </div>
+
+        <div class="stat-card">
+            <span>🆘</span>
+            <h2 id="requestCount">0</h2>
+            <p>Relief Requests</p>
+        </div>
+
+        <div class="stat-card">
+            <span>📦</span>
+            <h2 id="resourceCount">0</h2>
+            <p>Resources</p>
+        </div>
+
+        <div class="stat-card">
+            <span>📢</span>
+            <h2 id="alertCount">0</h2>
+            <p>Active Alerts</p>
+        </div>
+
+    </section>
+
+    <!-- Main Modules -->
+    <section class="dashboard-section">
+
+        <h2>Quick Access</h2>
+
+        <div class="dashboard-grid">
+
+            <a href="volunteer.html" class="dashboard-card">
+                <span>🙋</span>
+                <h3>Volunteers</h3>
+                <p>Manage volunteer information and availability.</p>
+            </a>
+
+            <a href="requests.html" class="dashboard-card">
+                <span>🆘</span>
+                <h3>Relief Requests</h3>
+                <p>View and manage requests from affected people.</p>
+            </a>
+
+            <a href="resources.html" class="dashboard-card">
+                <span>📦</span>
+                <h3>Resources</h3>
+                <p>Track food, water, medicines and relief materials.</p>
+            </a>
+
+            <a href="alerts.html" class="dashboard-card">
+                <span>📢</span>
+                <h3>Disaster Alerts</h3>
+                <p>View important disaster and emergency alerts.</p>
+            </a>
+
+            <a href="tasks.html" class="dashboard-card">
+                <span>📋</span>
+                <h3>Task Coordination</h3>
+                <p>Assign and monitor volunteer tasks.</p>
+            </a>
+
+            <a href="mytasks.html" class="dashboard-card">
+                <span>📝</span>
+                <h3>My Tasks</h3>
+                <p>View tasks assigned to you.</p>
+            </a>
+
+            <a href="locations.html" class="dashboard-card">
+                <span>📍</span>
+                <h3>Affected Locations</h3>
+                <p>View disaster affected areas and locations.</p>
+            </a>
+
+            <a href="food.html" class="dashboard-card">
+                <span>🍱</span>
+                <h3>Food Distribution</h3>
+                <p>Manage food distribution to people in need.</p>
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- Emergency Section -->
+    <section class="emergency">
+
+        <h2>🚨 Emergency Assistance</h2>
+
+        <p>
+            If immediate relief is required, submit a relief request.
+        </p>
+
+        <a href="requests.html" class="emergency-btn">
+            Submit Relief Request
+        </a>
+
+    </section>
+
+</main>
+
+<footer>
+
+    <h3>🆘 DVRMS</h3>
+
+    <p>
+        Disaster Relief Volunteer Management System
+    </p>
+
+    <p class="copyright">
+        © 2026 DVRMS
+    </p>
+
+</footer>
+
+<script>
+
+// Read saved data safely
+function getSavedData(key) {
+    try {
+        const data = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+// Update dashboard counts
+function updateDashboard() {
+
+    const volunteers = getSavedData("volunteerList");
+    const requests = getSavedData("reliefRequests");
+    const resources = getSavedData("resourceData");
+    const alerts = getSavedData("alertData");
+
+    document.getElementById("volunteerCount").textContent =
+        volunteers.length;
+
+    document.getElementById("requestCount").textContent =
+        requests.length;
+
+    document.getElementById("resourceCount").textContent =
+        resources.length;
+
+    document.getElementById("alertCount").textContent =
+        alerts.filter(alert => alert.active !== false).length;
+
+    // Welcome message based on logged-in user
+    const welcome = document.getElementById("welcomeMessage");
+    const userName = localStorage.getItem("userName");
+
+    if (welcome && userName) {
+        welcome.textContent = "Welcome, " + userName + " 👋";
+    } else if (welcome) {
+        welcome.textContent = "Welcome to DVRMS 👋";
+    }
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userMobile");
+}
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>
+

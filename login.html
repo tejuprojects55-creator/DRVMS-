@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVRMS | Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+    </nav>
+</header>
+
+<section class="login-section">
+    <div class="login-box">
+
+        <div class="login-icon">🔐</div>
+        <h1>Welcome Back</h1>
+        <p>Login to your DVRMS account</p>
+
+        <form id="loginForm">
+
+            <label>Email / Mobile Number / Username</label>
+            <input type="text" id="loginUser"
+                placeholder="Enter email, mobile or username" required>
+
+            <label>Password</label>
+            <input type="password" id="loginPassword"
+                placeholder="Enter password" required>
+
+            <label>Login As</label>
+            <select id="loginRole" required>
+                <option value="">Select role</option>
+                <option value="volunteer">Volunteer</option>
+                <option value="relief">Relief Worker</option>
+                <option value="admin">Administrator</option>
+            </select>
+
+            <button type="submit" class="login-btn">Login</button>
+
+        </form>
+
+        <p class="register-text">
+            Don't have an account?
+            <a href="register.html">Register as Volunteer</a>
+        </p>
+
+        <a href="index.html" class="back-home">← Back to Home</a>
+
+    </div>
+</section>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const user = document.getElementById("loginUser").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const role = document.getElementById("loginRole").value;
+
+    if (!user || !password || !role) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    // ADMIN LOGIN
+    if (role === "admin") {
+
+        if (user === "admin" && password === "admin123") {
+
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userRole", "admin");
+            localStorage.setItem("userName", "Administrator");
+
+            alert("Admin Login Successful!");
+
+            window.location.href = "dashboard.html";
+            return;
+
+        } else {
+            alert("Invalid Admin Username or Password!");
+            return;
+        }
+    }
+
+    // VOLUNTEER LOGIN
+    if (role === "volunteer") {
+
+        const volunteers = JSON.parse(
+            localStorage.getItem("volunteerList") || "[]"
+        );
+
+        const foundVolunteer = volunteers.find(function(volunteer) {
+            return (
+                ((volunteer.email || "").toLowerCase() === user.toLowerCase() ||
+                 volunteer.mobile === user) &&
+                volunteer.password === password
+            );
+        });
+
+        if (!foundVolunteer) {
+            alert("Invalid email/mobile number or password!");
+            return;
+        }
+
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", "volunteer");
+        localStorage.setItem("userName", foundVolunteer.name);
+        localStorage.setItem("userMobile", foundVolunteer.mobile);
+
+        alert("Volunteer Login Successful!");
+
+        window.location.href = "dashboard.html";
+        return;
+    }
+
+    // RELIEF WORKER
+    if (role === "relief") {
+        alert("Relief Worker login is not configured yet.");
+        return;
+    }
+
+});
+</script>
+
+</body>
+</html>
+

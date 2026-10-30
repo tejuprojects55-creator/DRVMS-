@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Disaster Alerts</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+:root {
+    --alert-red: #c62828;
+    --light-red: #fff1f1;
+    --dark: #243247;
+}
+
+body {
+    background: #f4f6fa;
+    color: var(--dark);
+}
+
+.page-container {
+    padding-top: 25px;
+    padding-bottom: 35px;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #b71c1c, #ef5350);
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #ffeaea;
+}
+
+.alert-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.alert-stat {
+    background: white;
+    padding: 20px 12px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 12px #00000010;
+    border-top: 4px solid var(--alert-red);
+}
+
+.alert-stat span {
+    font-size: 25px;
+}
+
+.alert-stat h2 {
+    color: var(--alert-red);
+    font-size: 28px;
+    margin: 8px 0;
+}
+
+.alert-stat p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.alert-form,
+.alerts-container,
+.safety-box {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px #00000010;
+}
+
+.alert-form {
+    border-top: 4px solid var(--alert-red);
+}
+
+.alert-form h2,
+.alerts-container h2,
+.safety-box h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.alert-form label {
+    display: block;
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+.alert-form input,
+.alert-form select,
+.alert-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0 12px;
+    border: 1px solid #d5dce5;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 15px;
+    background: #fafbfc;
+    outline: none;
+}
+
+.alert-form input:focus,
+.alert-form select:focus,
+.alert-form textarea:focus {
+    border-color: var(--alert-red);
+    box-shadow: 0 0 0 2px #c6282815;
+}
+
+.alert-form button {
+    width: 100%;
+    background: var(--alert-red);
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.alert-form button:hover {
+    background: #a51f1f;
+}
+
+.alert-card {
+    background: #fff;
+    padding: 18px;
+    margin: 15px 0;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    border-left: 5px solid #999;
+    box-shadow: 0 2px 8px #0000000d;
+}
+
+.high-alert { border-left-color: #dc2626; }
+.medium-alert { border-left-color: #f59e0b; }
+.low-alert { border-left-color: #16a34a; }
+
+.alert-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.alert-top h3 {
+    margin: 0;
+}
+
+.alert-level {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: var(--light-red);
+    color: var(--alert-red);
+}
+
+.alert-card p {
+    line-height: 1.6;
+    color: #475569;
+}
+
+.alert-card small {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.delete-alert {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 15px;
+    border-radius: 7px;
+    margin-top: 14px;
+    cursor: pointer;
+}
+
+.delete-alert:hover {
+    background: #a51f1f;
+}
+
+.empty-alert {
+    background: #fff5f5;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    color: #777;
+}
+
+.safety-box {
+    background: #fff8e7;
+    border-left: 5px solid #f59e0b;
+}
+
+.safety-box li {
+    margin: 12px 0;
+    line-height: 1.5;
+}
+
+footer {
+    margin-top: 25px;
+}
+
+@media(max-width: 480px) {
+    .page-header {
+        padding: 20px;
+    }
+
+    .alert-form,
+    .alerts-container,
+    .safety-box {
+        padding: 16px;
+    }
+
+    .alert-top h3 {
+        font-size: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="requests.html">Relief</a>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main class="page-container">
+
+    <section class="page-header">
+        <div>
+            <h1>📢 Disaster Alerts</h1>
+            <p>Important disaster and emergency information.</p>
+        </div>
+    </section>
+
+    <section class="alert-summary">
+
+        <div class="alert-stat">
+            <span>🚨</span>
+            <h2 id="activeCount">0</h2>
+            <p>Active Alerts</p>
+        </div>
+
+        <div class="alert-stat">
+            <span>📍</span>
+            <h2 id="areaCount">0</h2>
+            <p>Affected Areas</p>
+        </div>
+
+        <div class="alert-stat">
+            <span>🙋</span>
+            <h2 id="volunteerCount">0</h2>
+            <p>Volunteers Active</p>
+        </div>
+
+    </section>
+
+    <section class="alert-form">
+
+        <h2>➕ Add New Alert</h2>
+
+        <form id="alertForm">
+
+            <label>Alert Title</label>
+            <input type="text" id="alertTitle"
+                   placeholder="Enter alert title" required>
+
+            <label>Location</label>
+            <input type="text" id="alertLocation"
+                   placeholder="Enter affected location" required>
+
+            <label>Severity</label>
+            <select id="alertSeverity" required>
+                <option value="">Select Severity</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+            </select>
+
+            <label>Description</label>
+            <textarea id="alertDescription" rows="4"
+                      placeholder="Enter alert details" required></textarea>
+
+            <button type="submit">➕ Add Alert</button>
+
+        </form>
+
+    </section>
+
+    <section class="alerts-container">
+
+        <h2>🚨 Current Alerts</h2>
+        <div id="alertsList"></div>
+
+    </section>
+
+    <section class="safety-box">
+
+        <h2>🛡️ Safety Information</h2>
+
+        <ul>
+            <li>Stay updated with official disaster information.</li>
+            <li>Avoid entering flooded or unsafe areas.</li>
+            <li>Follow instructions from emergency authorities.</li>
+            <li>Keep essential documents and emergency supplies safe.</li>
+            <li>Use DVRMS to request or coordinate relief assistance.</li>
+        </ul>
+
+    </section>
+
+</main>
+
+<footer>
+    <h3>🆘 DVRMS</h3>
+    <p>Disaster Relief Volunteer Management System</p>
+    <p class="copyright">© 2026 DVRMS</p>
+</footer>
+
+<script>
+const form = document.getElementById("alertForm");
+const alertsList = document.getElementById("alertsList");
+
+function getAlerts() {
+    try {
+        return JSON.parse(localStorage.getItem("alertData")) || [];
+    } catch(e) {
+        return [];
+    }
+}
+
+function saveAlerts(alerts) {
+    localStorage.setItem("alertData", JSON.stringify(alerts));
+}
+
+function renderAlerts() {
+
+    const alerts = getAlerts();
+    alertsList.innerHTML = "";
+
+    document.getElementById("activeCount").textContent =
+        alerts.length;
+
+    const areas = new Set(
+        alerts.map(a => a.location.trim().toLowerCase())
+    );
+
+    document.getElementById("areaCount").textContent =
+        areas.size;
+
+    let volunteers = [];
+
+    try {
+        volunteers = JSON.parse(
+            localStorage.getItem("volunteerList")
+        ) || [];
+    } catch(e) {}
+
+    document.getElementById("volunteerCount").textContent =
+        volunteers.length;
+
+    if(alerts.length === 0) {
+        alertsList.innerHTML =
+            '<div class="empty-alert">No alerts added yet.</div>';
+        return;
+    }
+
+    alerts.forEach((alert, index) => {
+
+        const card = document.createElement("div");
+        const severity = (alert.severity || "LOW").toLowerCase();
+
+        card.className = "alert-card " + severity + "-alert";
+
+        const top = document.createElement("div");
+        top.className = "alert-top";
+
+        const title = document.createElement("h3");
+        title.textContent = "🚨 " + alert.title;
+
+        const level = document.createElement("span");
+        level.className = "alert-level";
+        level.textContent = alert.severity;
+
+        top.append(title, level);
+
+        const description = document.createElement("p");
+        description.textContent = alert.description;
+
+        const location = document.createElement("small");
+        location.textContent = "📍 " + alert.location;
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "delete-alert";
+        removeButton.textContent = "🗑 Delete Alert";
+
+        removeButton.addEventListener("click", function() {
+
+            if(!confirm("Are you sure you want to delete this alert?")) {
+                return;
+            }
+
+            const updatedAlerts = getAlerts();
+            updatedAlerts.splice(index, 1);
+
+            saveAlerts(updatedAlerts);
+            renderAlerts();
+
+            alert("Alert deleted successfully!");
+        });
+
+        card.append(top, description, location, removeButton);
+        alertsList.appendChild(card);
+    });
+}
+
+form.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const newAlert = {
+        title: document.getElementById("alertTitle").value.trim(),
+        location: document.getElementById("alertLocation").value.trim(),
+        severity: document.getElementById("alertSeverity").value,
+        description: document.getElementById("alertDescription").value.trim()
+    };
+
+    const alerts = getAlerts();
+    alerts.push(newAlert);
+
+    saveAlerts(alerts);
+
+    form.reset();
+    renderAlerts();
+
+    alert("Disaster alert added successfully!");
+});
+
+renderAlerts();
+</script>
+
+</body>
+</html>

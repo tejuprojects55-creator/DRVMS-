@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Affected Locations</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    background: #fff7ed;
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, #c2410c, #ea580c, #fb923c);
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(234,88,12,0.18);
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #fff7ed;
+}
+
+/* Location Form */
+.location-form {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(194,65,12,0.09);
+    border-top: 5px solid #ea580c;
+}
+
+.location-form h2 {
+    color: #c2410c;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.location-form label {
+    display: block;
+    color: #9a3412;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.location-form input,
+.location-form select,
+.location-form textarea {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0 15px;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #fffbf5;
+    outline: none;
+    transition: 0.3s;
+}
+
+.location-form input:focus,
+.location-form select:focus,
+.location-form textarea:focus {
+    border-color: #ea580c;
+    box-shadow: 0 0 0 3px rgba(234,88,12,0.12);
+    background: white;
+}
+
+.location-form textarea {
+    resize: vertical;
+}
+
+.location-form button {
+    background: linear-gradient(135deg, #c2410c, #f97316);
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.location-form button:hover {
+    background: #9a3412;
+    transform: translateY(-2px);
+}
+
+/* Location List */
+section > h2 {
+    color: #c2410c;
+    margin-top: 25px;
+}
+
+.location-card {
+    background: white;
+    padding: 20px;
+    margin: 16px 0;
+    border-radius: 12px;
+    border-left: 5px solid #ea580c;
+    box-shadow: 0 3px 12px rgba(194,65,12,0.08);
+    transition: 0.3s;
+}
+
+.location-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(194,65,12,0.13);
+}
+
+.location-card h3 {
+    color: #c2410c;
+    margin-top: 0;
+    font-size: 19px;
+}
+
+.location-card p {
+    color: #57534e;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+
+/* Empty Message */
+.empty {
+    background: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 12px;
+    color: #78716c;
+    border: 1px dashed #fdba74;
+}
+
+/* Footer */
+footer {
+    margin-top: 35px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .page-header {
+        padding: 20px;
+    }
+
+    .location-form {
+        padding: 18px;
+    }
+
+    .location-card {
+        padding: 16px;
+    }
+
+    .location-form button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="alerts.html">Alerts</a>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main class="page-container">
+
+<section class="page-header">
+    <div>
+        <h1>📍 Affected Locations</h1>
+        <p>Manage disaster affected areas and locations.</p>
+    </div>
+</section>
+
+<section class="location-form">
+
+    <h2>➕ Add Affected Location</h2>
+
+    <form id="locationForm">
+
+        <label>Location Name</label>
+        <input type="text" id="locationName"
+        placeholder="Enter location name" required>
+
+        <label>District</label>
+        <input type="text" id="district"
+        placeholder="Enter district name" required>
+
+        <label>Disaster Type</label>
+        <select id="disasterType" required>
+            <option value="">Select Disaster</option>
+            <option>Flood</option>
+            <option>Heavy Rainfall</option>
+            <option>Cyclone</option>
+            <option>Earthquake</option>
+            <option>Landslide</option>
+            <option>Other</option>
+        </select>
+
+        <label>Severity</label>
+        <select id="severity" required>
+            <option value="">Select Severity</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+        <label>Description</label>
+        <textarea id="description" rows="4"
+        placeholder="Enter affected area details" required></textarea>
+
+        <button type="submit">Add Location</button>
+
+    </form>
+</section>
+
+<section>
+    <h2>📍 Affected Areas List</h2>
+    <div id="locationList"></div>
+</section>
+
+</main>
+
+<footer>
+    <h3>🆘 DVRMS</h3>
+    <p>Disaster Relief Volunteer Management System</p>
+    <p class="copyright">© 2026 DVRMS</p>
+</footer>
+
+<script>
+const form = document.getElementById("locationForm");
+const locationList = document.getElementById("locationList");
+
+function getLocations() {
+    try {
+        return JSON.parse(localStorage.getItem("locationData")) || [];
+    } catch(e) {
+        return [];
+    }
+}
+
+function saveLocations(locations) {
+    localStorage.setItem("locationData", JSON.stringify(locations));
+}
+
+function showLocations() {
+    const locations = getLocations();
+    locationList.innerHTML = "";
+
+    if(locations.length === 0) {
+        locationList.innerHTML =
+        '<div class="empty">No affected locations added yet.</div>';
+        return;
+    }
+
+    locations.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "location-card";
+
+        const title = document.createElement("h3");
+        title.textContent = "📍 " + item.name;
+
+        const district = document.createElement("p");
+        district.textContent = "District: " + item.district;
+
+        const disaster = document.createElement("p");
+        disaster.textContent = "Disaster: " + item.disaster;
+
+        const severity = document.createElement("p");
+        severity.textContent = "Severity: " + item.severity;
+
+        const description = document.createElement("p");
+        description.textContent = item.description;
+
+        const button = document.createElement("button");
+        button.className = "delete-btn";
+        button.textContent = "Delete Location";
+
+        button.addEventListener("click", function() {
+
+            const confirmDelete = confirm(
+                "Are you sure you want to delete this location?"
+            );
+
+            if(!confirmDelete) {
+                return;
+            }
+
+            const updated = getLocations();
+            updated.splice(index, 1);
+
+            saveLocations(updated);
+            showLocations();
+
+            alert("Location deleted successfully!");
+        });
+
+        card.append(
+            title,
+            district,
+            disaster,
+            severity,
+            description,
+            button
+        );
+
+        locationList.appendChild(card);
+    });
+}
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const location = {
+        name: document.getElementById("locationName").value.trim(),
+        district: document.getElementById("district").value.trim(),
+        disaster: document.getElementById("disasterType").value,
+        severity: document.getElementById("severity").value,
+        description: document.getElementById("description").value.trim()
+    };
+
+    const locations = getLocations();
+    locations.push(location);
+
+    saveLocations(locations);
+
+    form.reset();
+    showLocations();
+
+    alert("Affected location added successfully!");
+});
+
+showLocations();
+</script>
+
+</body>
+</html>

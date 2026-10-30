@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Volunteers</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.table-wrapper { overflow-x: auto; }
+
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.info-card {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: white;
+    color: inherit;
+    text-decoration: none;
+    text-align: center;
+    padding: 28px 20px;
+    border: none;
+    border-top: 5px solid #2563eb;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(37,99,235,0.15);
+}
+
+.card-icon {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.info-card h3 {
+    color: #1e40af;
+    margin: 10px 0;
+    font-size: 21px;
+}
+
+.info-card p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.card-action {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px !important;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.filter-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.reset-box {
+    background: white;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.reset-box h2 {
+    color: #1e40af;
+    margin-top: 0;
+}
+
+.reset-box label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.reset-box input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 7px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+}
+
+.reset-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media(max-width:600px) {
+    .info-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main class="page-container">
+
+    <section class="page-header">
+        <div>
+            <h1>🙋 Volunteer Management</h1>
+            <p>View registered volunteers and their availability.</p>
+        </div>
+
+        <a href="register.html" class="page-btn">
+            + Register Volunteer
+        </a>
+    </section>
+
+    <section class="search-box">
+        <input
+            type="text"
+            id="searchVolunteer"
+            placeholder="🔍 Search volunteer by name or skill..."
+            onkeyup="searchVolunteer()"
+        >
+    </section>
+
+    <div class="filter-actions">
+        <button class="filter-btn" onclick="showAllVolunteers()">
+            Show All Volunteers
+        </button>
+    </div>
+
+    <section class="table-card">
+        <h2>Registered Volunteers</h2>
+
+        <div class="table-wrapper">
+            <table id="volunteerTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Skill</th>
+                        <th>Availability</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="volunteerRows"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- RESET PASSWORD SECTION -->
+    <section class="reset-box">
+
+        <h2>🔐 Reset Volunteer Password</h2>
+        <p>Enter your registered mobile number and create a new password.</p>
+
+        <form id="resetForm">
+
+            <label>Registered Mobile Number</label>
+            <input
+                type="tel"
+                id="resetMobile"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                placeholder="Enter registered mobile number"
+                required
+            >
+
+            <label>New Password</label>
+            <input
+                type="password"
+                id="newPassword"
+                placeholder="Enter new password"
+                required
+                minlength="4"
+            >
+
+            <label>Confirm New Password</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm new password"
+                required
+                minlength="4"
+            >
+
+            <button type="submit" class="reset-btn">
+                Reset Password
+            </button>
+
+        </form>
+
+    </section>
+
+    <section class="info-cards">
+
+        <a href="register.html" class="info-card">
+            <span class="card-icon">🙋</span>
+            <h3>Volunteer Registration</h3>
+            <p>Volunteers can register with their skills, location and availability.</p>
+            <span class="card-action">Register Now →</span>
+        </a>
+
+        <button type="button" class="info-card" onclick="matchBySkill()">
+            <span class="card-icon">🧭</span>
+            <h3>Skill Matching</h3>
+            <p>Find registered volunteers based on their skills.</p>
+            <span class="card-action">Find Volunteers →</span>
+        </button>
+
+        <a href="tasks.html" class="info-card">
+            <span class="card-icon">📋</span>
+            <h3>Task Assignment</h3>
+            <p>Available volunteers can be assigned to suitable relief activities.</p>
+            <span class="card-action">Assign Tasks →</span>
+        </a>
+
+    </section>
+
+</main>
+
+<footer>
+    <div class="logo">SOS DVRMS</div>
+    <p>Disaster Relief Volunteer Management System</p>
+    <p>© 2026 DVRMS</p>
+</footer>
+
+<script>
+
+function getVolunteers() {
+    try {
+        const data = JSON.parse(
+            localStorage.getItem("volunteerList") || "[]"
+        );
+        return Array.isArray(data) ? data : [];
+    } catch(error) {
+        return [];
+    }
+}
+
+function renderVolunteers(list = getVolunteers(),
+    emptyMessage = "No volunteers registered yet.") {
+
+    const tbody = document.getElementById("volunteerRows");
+    tbody.innerHTML = "";
+
+    if(list.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 6;
+        cell.textContent = emptyMessage;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+    }
+
+    list.forEach(function(v) {
+
+        const row = document.createElement("tr");
+
+        [
+            v.name,
+            v.location,
+            Array.isArray(v.skill) ? v.skill.join(", ") : v.skill,
+            v.availability,
+            "Registered"
+        ].forEach(function(value) {
+
+            const cell = document.createElement("td");
+            cell.textContent = value || "-";
+            row.appendChild(cell);
+
+        });
+
+        const actionCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
+
+        deleteBtn.addEventListener("click", function() {
+            deleteVolunteer(v.id);
+        });
+
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+        tbody.appendChild(row);
+    });
+}
+
+function deleteVolunteer(id) {
+
+    if(!confirm("Are you sure you want to delete this volunteer?")) {
+        return;
+    }
+
+    let volunteers = getVolunteers();
+
+    volunteers = volunteers.filter(function(v) {
+        return v.id !== id;
+    });
+
+    localStorage.setItem("volunteerList", JSON.stringify(volunteers));
+
+    try {
+        const latest = JSON.parse(
+            localStorage.getItem("volunteerData") || "null"
+        );
+
+        if(latest && latest.id === id) {
+            localStorage.removeItem("volunteerData");
+        }
+    } catch(error) {}
+
+    renderVolunteers();
+    alert("Volunteer deleted successfully!");
+}
+
+function searchVolunteer() {
+
+    const input = document.getElementById("searchVolunteer")
+        .value.trim().toLowerCase();
+
+    const volunteers = getVolunteers();
+
+    const filtered = volunteers.filter(function(v) {
+
+        const name = String(v.name || "").toLowerCase();
+        const skill = Array.isArray(v.skill)
+            ? v.skill.join(", ").toLowerCase()
+            : String(v.skill || "").toLowerCase();
+
+        return name.includes(input) || skill.includes(input);
+    });
+
+    renderVolunteers(filtered, "No matching volunteers found.");
+}
+
+function matchBySkill() {
+
+    const skill = prompt("Enter the skill you want to find:");
+
+    if(skill === null || skill.trim() === "") {
+        return;
+    }
+
+    const searchSkill = skill.trim().toLowerCase();
+    const volunteers = getVolunteers();
+
+    const matches = volunteers.filter(function(v) {
+
+        const volunteerSkill = Array.isArray(v.skill)
+            ? v.skill.join(", ").toLowerCase()
+            : String(v.skill || "").toLowerCase();
+
+        return volunteerSkill.includes(searchSkill);
+    });
+
+    document.getElementById("searchVolunteer").value = "";
+
+    renderVolunteers(matches, "No volunteers found with this skill.");
+
+    if(matches.length > 0) {
+        alert(matches.length + " matching volunteer(s) found!");
+    } else {
+        alert("No volunteers found with this skill.");
+    }
+}
+
+function showAllVolunteers() {
+    document.getElementById("searchVolunteer").value = "";
+    renderVolunteers();
+}
+
+// RESET PASSWORD
+document.getElementById("resetForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const mobile = document.getElementById("resetMobile").value.trim();
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if(newPassword !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    let volunteers = getVolunteers();
+
+    const index = volunteers.findIndex(function(v) {
+        return v.mobile === mobile;
+    });
+
+    if(index === -1) {
+        alert("Mobile number not found!");
+        return;
+    }
+
+    volunteers[index].password = newPassword;
+
+    localStorage.setItem("volunteerList", JSON.stringify(volunteers));
+
+    alert("Password reset successfully! You can now login with your new password.");
+
+    document.getElementById("resetForm").reset();
+
+});
+
+renderVolunteers();
+
+</script>
+
+</body>
+</html>

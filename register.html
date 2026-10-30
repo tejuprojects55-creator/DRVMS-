@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DVRMS | Volunteer Registration</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+
+<section class="register-section">
+
+    <div class="register-box">
+
+        <div class="register-icon">🙋</div>
+
+        <h1>Volunteer Registration</h1>
+
+        <p>Join DVRMS and help during disaster situations.</p>
+
+
+        <form id="registerForm">
+
+            <label>Full Name</label>
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+
+            <label>Mobile Number</label>
+            <input
+                type="tel"
+                id="mobile"
+                placeholder="Enter mobile number"
+                maxlength="10"
+                required
+            >
+
+
+            <label>Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter email address"
+                required
+            >
+
+
+            <label>Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Create a password"
+                required
+            >
+
+
+            <label>Location</label>
+            <input
+                type="text"
+                id="location"
+                placeholder="Enter your city / area"
+                required
+            >
+
+
+            <label>Volunteer Skill</label>
+
+            <select id="skill" required>
+
+                <option value="">Select your skill</option>
+                <option value="Medical Support">Medical Support</option>
+                <option value="Food Distribution">Food Distribution</option>
+                <option value="Rescue Support">Rescue Support</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Communication">Communication</option>
+                <option value="General Support">General Support</option>
+
+            </select>
+
+
+            <label>Availability</label>
+
+            <select id="availability" required>
+
+                <option value="">Select availability</option>
+                <option value="Available">Available</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Emergency Only">Emergency Only</option>
+
+            </select>
+
+
+            <button type="submit" class="register-btn">
+                Register as Volunteer
+            </button>
+
+        </form>
+
+
+        <p class="login-text">
+            Already registered?
+            <a href="login.html">Login here</a>
+        </p>
+
+
+        <a href="index.html" class="back-home">
+            ← Back to Home
+        </a>
+
+    </div>
+
+</section>
+
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const volunteer = {
+        id: Date.now(),
+        name: document.getElementById("name").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value,
+        location: document.getElementById("location").value.trim(),
+        skill: document.getElementById("skill").value,
+        availability: document.getElementById("availability").value,
+        status: "Registered"
+    };
+
+    if (!/^\d{10}$/.test(volunteer.mobile)) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+    }
+
+    let volunteers = [];
+
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem("volunteerList") || "[]"
+        );
+
+        if (Array.isArray(saved)) {
+            volunteers = saved;
+        }
+    } catch (error) {
+        volunteers = [];
+    }
+
+    if (volunteers.some(v => v.mobile === volunteer.mobile)) {
+        alert("This mobile number is already registered.");
+        return;
+    }
+
+    volunteers.push(volunteer);
+
+    localStorage.setItem(
+        "volunteerList",
+        JSON.stringify(volunteers)
+    );
+
+    // Keep the latest volunteer available for the welcome message
+    localStorage.setItem(
+        "volunteerData",
+        JSON.stringify(volunteer)
+    );
+
+    alert("Volunteer registered successfully!");
+    window.location.href = "volunteer.html";
+});
+</script>
+
+
+</body>
+</html>

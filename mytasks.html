@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVRMS | My Tasks</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .mytasks-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .mytasks-heading {
+            margin-bottom: 25px;
+        }
+
+        .my-task-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid #2563eb;
+        }
+
+        .my-task-card h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+
+        .task-info {
+            margin: 8px 0;
+            color: #444;
+        }
+
+        .priority {
+            font-weight: bold;
+        }
+
+        .high { color: #dc2626; }
+        .medium { color: #d97706; }
+        .low { color: #16a34a; }
+
+        .task-status {
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        .completed {
+            color: #16a34a;
+        }
+
+        .pending {
+            color: #d97706;
+        }
+
+        .complete-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .complete-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .no-tasks {
+            background: #eff6ff;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </nav>
+</header>
+
+<main class="mytasks-container">
+
+    <section class="mytasks-heading">
+        <h1>📝 My Assigned Tasks</h1>
+        <p id="volunteerWelcome">Your assigned tasks are shown here.</p>
+    </section>
+
+    <div id="taskList"></div>
+
+</main>
+
+<footer>
+    <h3>🆘 DVRMS</h3>
+    <p>Disaster Relief Volunteer Management System</p>
+    <p class="copyright">© 2026 DVRMS</p>
+</footer>
+
+<script>
+
+// Get logged-in volunteer
+const userName = localStorage.getItem("userName");
+const userRole = localStorage.getItem("userRole");
+
+// Check login
+if (
+    localStorage.getItem("isLoggedIn") !== "true" ||
+    userRole !== "volunteer" ||
+    !userName
+) {
+    alert("Please login as a volunteer.");
+    window.location.href = "login.html";
+
+} else {
+
+    document.getElementById("volunteerWelcome").textContent =
+        "Welcome, " + userName + "! Here are your assigned tasks.";
+
+    showMyTasks();
+}
+
+// Get saved tasks
+function getTasks() {
+    try {
+        const tasks = JSON.parse(localStorage.getItem("taskData"));
+        return Array.isArray(tasks) ? tasks : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+// Display volunteer tasks
+function showMyTasks() {
+
+    const tasks = getTasks();
+    const taskList = document.getElementById("taskList");
+
+    taskList.innerHTML = "";
+
+    let found = false;
+
+    tasks.forEach(function(task, index) {
+
+        if (
+            !task.volunteer ||
+            task.volunteer.trim().toLowerCase() !==
+            userName.trim().toLowerCase()
+        ) {
+            return;
+        }
+
+        found = true;
+
+        const card = document.createElement("div");
+        card.className = "my-task-card";
+
+        const title = document.createElement("h3");
+        title.textContent = "📋 " + task.name;
+
+        const location = document.createElement("p");
+        location.className = "task-info";
+        location.textContent =
+            "📍 Location: " + (task.location || "Not specified");
+
+        const priority = document.createElement("p");
+        priority.className = "task-info priority";
+
+        const level = (task.priority || "Not specified").toLowerCase();
+
+        priority.textContent =
+            "Priority: " + (task.priority || "Not specified");
+
+        priority.classList.add(
+            level === "high" ? "high" :
+            level === "medium" ? "medium" : "low"
+        );
+
+        const description = document.createElement("p");
+        description.className = "task-info";
+        description.textContent =
+            "Description: " + (task.description || "No description");
+
+        // Task status
+        const status = document.createElement("p");
+        status.className = "task-status";
+
+        const isCompleted = task.status === "Completed";
+
+        status.textContent = isCompleted
+            ? "Status: Completed ✅"
+            : "Status: Pending ⏳";
+
+        status.classList.add(
+            isCompleted ? "completed" : "pending"
+        );
+
+        // Complete button
+        const button = document.createElement("button");
+        button.className = "complete-btn";
+        button.textContent = isCompleted
+            ? "Completed ✓"
+            : "Mark as Completed";
+
+        button.disabled = isCompleted;
+
+        button.onclick = function() {
+            markCompleted(index);
+        };
+
+        card.appendChild(title);
+        card.appendChild(location);
+        card.appendChild(priority);
+        card.appendChild(description);
+        card.appendChild(status);
+        card.appendChild(button);
+
+        taskList.appendChild(card);
+    });
+
+    if (!found) {
+        taskList.innerHTML = `
+            <div class="no-tasks">
+                <h3>No Tasks Assigned Yet!</h3>
+                <p>Your assigned tasks will appear here.</p>
+            </div>
+        `;
+    }
+}
+
+// Mark task as completed
+function markCompleted(index) {
+
+    const tasks = getTasks();
+
+    if (!tasks[index]) return;
+
+    if (
+        !tasks[index].volunteer ||
+        tasks[index].volunteer.trim().toLowerCase() !==
+        userName.trim().toLowerCase()
+    ) {
+        return;
+    }
+
+    tasks[index].status = "Completed";
+
+    localStorage.setItem("taskData", JSON.stringify(tasks));
+
+    showMyTasks();
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userMobile");
+}
+
+</script>
+
+</body>
+</html>
+

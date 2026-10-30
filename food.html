@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVRMS | Food Distribution</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    background: #f0fdf4;
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, #166534, #16a34a, #4ade80);
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(22,163,74,0.18);
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #f0fdf4;
+}
+
+/* Food Summary */
+.food-summary {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.food-stat {
+    background: white;
+    padding: 20px 15px;
+    border-radius: 12px;
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(22,101,52,0.08);
+    border-top: 4px solid #16a34a;
+    transition: 0.3s;
+}
+
+.food-stat:hover {
+    transform: translateY(-3px);
+}
+
+.food-stat span {
+    font-size: 25px;
+}
+
+.food-stat h2 {
+    color: #15803d;
+    margin: 8px 0;
+    font-size: 26px;
+}
+
+.food-stat p {
+    color: #64748b;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Food Form */
+.food-form {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(22,101,52,0.09);
+    border-top: 5px solid #16a34a;
+}
+
+.food-form h2 {
+    color: #166534;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.food-form label {
+    display: block;
+    color: #166534;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.food-form input,
+.food-form select,
+.food-form textarea {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0 15px;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #f7fef8;
+    outline: none;
+    transition: 0.3s;
+}
+
+.food-form input:focus,
+.food-form select:focus,
+.food-form textarea:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22,163,74,0.12);
+    background: white;
+}
+
+.food-form textarea {
+    resize: vertical;
+}
+
+.food-form button {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.food-form button:hover {
+    background: #166534;
+    transform: translateY(-2px);
+}
+
+/* Distribution List */
+section > h2 {
+    color: #166534;
+    margin-top: 25px;
+}
+
+/* Food Cards */
+.food-card {
+    background: white;
+    padding: 20px;
+    margin: 16px 0;
+    border-radius: 12px;
+    border-left: 5px solid #16a34a;
+    box-shadow: 0 3px 12px rgba(22,101,52,0.08);
+    transition: 0.3s;
+}
+
+.food-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(22,101,52,0.13);
+}
+
+.food-card h3 {
+    margin-top: 0;
+    color: #15803d;
+    font-size: 19px;
+}
+
+.food-card p {
+    color: #475569;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Delivery Status */
+.status-select {
+    padding: 10px;
+    border: 1px solid #86efac;
+    border-radius: 7px;
+    margin-top: 8px;
+    background: #f0fdf4;
+    color: #166534;
+    font-weight: 600;
+    outline: none;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+
+/* Empty Message */
+.empty {
+    background: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 12px;
+    color: #64748b;
+    border: 1px dashed #86efac;
+}
+
+/* Footer */
+footer {
+    margin-top: 35px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .page-header {
+        padding: 20px;
+    }
+
+    .food-form {
+        padding: 18px;
+    }
+
+    .food-card {
+        padding: 16px;
+    }
+
+    .food-form button {
+        width: 100%;
+    }
+
+    .food-stat {
+        min-width: 90px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🆘 DVRMS</div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="volunteer.html">Volunteers</a>
+        <a href="resources.html">Resources</a>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main class="page-container">
+
+    <section class="page-header">
+        <div>
+            <h1>🍱 Food Distribution</h1>
+            <p>Manage food distribution to people in need.</p>
+        </div>
+    </section>
+
+    <section class="food-summary">
+
+        <div class="food-stat">
+            <span>🍱</span>
+            <h2 id="totalCount">0</h2>
+            <p>Total Records</p>
+        </div>
+
+        <div class="food-stat">
+            <span>⏳</span>
+            <h2 id="pendingCount">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="food-stat">
+            <span>✅</span>
+            <h2 id="deliveredCount">0</h2>
+            <p>Delivered</p>
+        </div>
+
+    </section>
+
+    <section class="food-form">
+
+        <h2>➕ Add Food Distribution</h2>
+
+        <form id="foodForm">
+
+            <label>Distribution Location</label>
+            <input type="text" id="foodLocation"
+            placeholder="Example: Kakinada Bus Stand"
+            required>
+
+            <label>Food Type</label>
+            <select id="foodType" required>
+                <option value="">Select Food Type</option>
+                <option>Food Packets</option>
+                <option>Meals</option>
+                <option>Drinking Water</option>
+                <option>Breakfast</option>
+                <option>Lunch</option>
+                <option>Other</option>
+            </select>
+
+            <label>Quantity</label>
+            <input type="number" id="foodQuantity"
+            placeholder="Enter number of packets/items"
+            min="1" required>
+
+            <label>Assign Volunteer</label>
+            <select id="foodVolunteer" required>
+                <option value="">Select Volunteer</option>
+            </select>
+
+            <label>Distribution Date</label>
+            <input type="date" id="foodDate" required>
+
+            <label>Status</label>
+            <select id="foodStatus" required>
+                <option value="Pending">Pending</option>
+                <option value="Assigned">Assigned</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+
+            <label>Additional Details</label>
+            <textarea id="foodDetails" rows="3"
+            placeholder="Enter distribution details (optional)"></textarea>
+
+            <button type="submit">Add Distribution</button>
+
+        </form>
+
+    </section>
+
+    <section>
+
+        <h2>📋 Food Distribution Records</h2>
+
+        <div id="foodList"></div>
+
+    </section>
+
+</main>
+
+<footer>
+    <h3>🆘 DVRMS</h3>
+    <p>Disaster Relief Volunteer Management System</p>
+    <p class="copyright">© 2026 DVRMS</p>
+</footer>
+
+<script>
+
+const form = document.getElementById("foodForm");
+const foodList = document.getElementById("foodList");
+
+function getFoodRecords() {
+    try {
+        const data = JSON.parse(
+            localStorage.getItem("foodData")
+        );
+
+        return Array.isArray(data) ? data : [];
+
+    } catch(e) {
+        return [];
+    }
+}
+
+function saveFoodRecords(records) {
+    localStorage.setItem(
+        "foodData",
+        JSON.stringify(records)
+    );
+}
+
+function loadVolunteers() {
+
+    const select = document.getElementById("foodVolunteer");
+
+    select.innerHTML =
+        '<option value="">Select Volunteer</option>';
+
+    let volunteers = [];
+
+    try {
+        volunteers = JSON.parse(
+            localStorage.getItem("volunteerList")
+        ) || [];
+    } catch(e) {}
+
+    if(volunteers.length === 0) {
+
+        const option = document.createElement("option");
+        option.value = "Not Assigned";
+        option.textContent = "Not Assigned";
+
+        select.appendChild(option);
+
+        return;
+    }
+
+    volunteers.forEach(volunteer => {
+
+        const option = document.createElement("option");
+
+        option.value = volunteer.name;
+        option.textContent = volunteer.name;
+
+        select.appendChild(option);
+
+    });
+}
+
+function showFoodRecords() {
+
+    const records = getFoodRecords();
+
+    foodList.innerHTML = "";
+
+    document.getElementById("totalCount").textContent =
+        records.length;
+
+    document.getElementById("pendingCount").textContent =
+        records.filter(item => item.status === "Pending").length;
+
+    document.getElementById("deliveredCount").textContent =
+        records.filter(item => item.status === "Delivered").length;
+
+    if(records.length === 0) {
+
+        foodList.innerHTML =
+        '<div class="empty">No food distribution records added yet.</div>';
+
+        return;
+    }
+
+    records.forEach((item, index) => {
+
+        const card = document.createElement("div");
+        card.className = "food-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "🍱 " + item.location;
+
+        const type = document.createElement("p");
+        type.textContent = "Food Type: " + item.foodType;
+
+        const quantity = document.createElement("p");
+        quantity.textContent = "Quantity: " + item.quantity;
+
+        const volunteer = document.createElement("p");
+        volunteer.textContent = "🙋 Volunteer: " + item.volunteer;
+
+        const date = document.createElement("p");
+        date.textContent = "📅 Date: " + item.date;
+
+        const details = document.createElement("p");
+        details.textContent = "Details: " + (item.details || "None");
+
+        const statusLabel = document.createElement("label");
+        statusLabel.textContent = "Delivery Status: ";
+
+        const statusSelect = document.createElement("select");
+        statusSelect.className = "status-select";
+
+        ["Pending", "Assigned", "Delivered"].forEach(status => {
+
+            const option = document.createElement("option");
+            option.value = status;
+            option.textContent = status;
+
+            statusSelect.appendChild(option);
+
+        });
+
+        statusSelect.value = item.status;
+
+        statusSelect.addEventListener("change", function() {
+
+            const updated = getFoodRecords();
+
+            updated[index].status = statusSelect.value;
+
+            saveFoodRecords(updated);
+            showFoodRecords();
+
+        });
+
+        const button = document.createElement("button");
+
+        button.className = "delete-btn";
+        button.textContent = "Delete Record";
+
+        button.addEventListener("click", function() {
+
+            const confirmDelete = confirm(
+                "Are you sure you want to delete this food distribution record?"
+            );
+
+            if(!confirmDelete) {
+                return;
+            }
+
+            const updated = getFoodRecords();
+
+            updated.splice(index, 1);
+
+            saveFoodRecords(updated);
+
+            showFoodRecords();
+
+            alert("Food distribution record deleted successfully!");
+
+        });
+
+        statusLabel.appendChild(statusSelect);
+
+        card.append(
+            heading,
+            type,
+            quantity,
+            volunteer,
+            date,
+            details,
+            statusLabel,
+            document.createElement("br"),
+            button
+        );
+
+        foodList.appendChild(card);
+
+    });
+
+}
+
+form.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const food = {
+
+        id: Date.now(),
+
+        location: document.getElementById("foodLocation").value.trim(),
+
+        foodType: document.getElementById("foodType").value,
+
+        quantity: Number(
+            document.getElementById("foodQuantity").value
+        ),
+
+        volunteer: document.getElementById("foodVolunteer").value,
+
+        date: document.getElementById("foodDate").value,
+
+        status: document.getElementById("foodStatus").value,
+
+        details: document.getElementById("foodDetails").value.trim()
+
+    };
+
+    const records = getFoodRecords();
+
+    records.push(food);
+
+    saveFoodRecords(records);
+
+    form.reset();
+
+    showFoodRecords();
+
+    alert("Food distribution added successfully!");
+
+});
+
+document.getElementById("foodDate").value =
+    new Date().toLocaleDateString("en-CA");
+
+loadVolunteers();
+showFoodRecords();
+
+</script>
+
+</body>
+</html>
